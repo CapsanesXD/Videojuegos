@@ -1,0 +1,109 @@
+/* Reset básico */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+ 
+/* Layout general */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+ 
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e3a8a;
+  color: white;
+  padding: 1rem 2rem;
+}
+ 
+.header-left {
+  display: flex;
+  align-items: center;
+}
+ 
+.logo {
+  width: 40px;
+  margin-right: 1rem;
+}
+ 
+.header-nav a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+ 
+.header-nav a:hover {
+  text-decoration: underline;
+}
+ 
+/* Main layout */
+.main-layout {
+  display: flex;
+  flex: 1;
+}
+ 
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #f4f4f4;
+  padding: 1.5rem;
+  border-right: 1px solid #ddd;
+}
+ 
+.sidebar h2 {
+  margin-bottom: 1rem;
+}
+ 
+.menu-item {
+  margin: 0.8rem 0;
+  cursor: pointer;
+  font-weight: 500;
+}
+ 
+.menu-item:hover {
+  color: #1e3a8a;
+}
+ 
+/* Content */
+.content {
+  flex: 1;
+  padding: 2rem;
+}
+ 
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+ 
+.card {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+ 
+.card:hover {
+  background: #f0f8ff;
+  border-color: #1e3a8a;
+}
+ 
+/* Footer */
+.footer {
+  background: #1e3a8a;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
