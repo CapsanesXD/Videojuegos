@@ -5,92 +5,79 @@ import { Link } from 'react-router-dom';
 export default function Favorites() {
   const { favorites, removeFavorite } = useContext(FavoritesContext);
 
-  // Vista en caso de que no haya elementos guardados
   if (favorites.length === 0) {
     return (
-      <div style={{ fontFamily: 'sans-serif', maxWidth: '700px', margin: '0 auto', padding: '20px', color: '#fff' }}>
-        <h2>Mis Favoritos</h2>
-        <p style={{ color: '#94a3b8', backgroundColor: '#1a202c', padding: '20px', borderRadius: '8px', border: '1px solid #2d3748' }}>
-          No tienes juegos favoritos aún. ¡Explora el catálogo y añade los que te gusten!
+      <div style={{ fontFamily: 'sans-serif', maxWidth: '820px', margin: '0 auto', padding: '20px', color: '#fff' }}>
+        <h2 style={{ marginBottom: '16px', color: '#f8fafc' }}>Mis Favoritos</h2>
+        <p style={{ color: '#94a3b8', backgroundColor: '#111827', padding: '24px', borderRadius: '16px', border: '1px solid #2d3748' }}>
+          No tienes juegos favoritos aún. ¡Explora el catálogo y añade los que te gusten para verlos aquí.
         </p>
       </div>
     );
   }
 
   return (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: '700px', margin: '0 auto', padding: '20px', color: '#fff' }}>
-      <h2 style={{ marginBottom: '20px' }}>Mis Favoritos</h2>
-      
-      {/* Lista con el mismo diseño que el catálogo */}
-      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div style={{ fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto', padding: '20px 0', color: '#fff' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h2 style={{ margin: 0, color: '#f8fafc' }}>Mis Favoritos</h2>
+        <p style={{ margin: '10px 0 0', color: '#94a3b8' }}>
+          Aquí tienes los juegos guardados en tu lista de favoritos.
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
         {favorites.map((game) => (
-          <li 
-            key={game.id} 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'stretch', 
-              backgroundColor: '#1a202c', 
-              border: '1px solid #2d3748',
-              borderRadius: '12px',
-              overflow: 'hidden', 
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-            }}
-          >
-            {/* Imagen del juego en favoritos */}
-            <img 
-              src={game.image} 
-              alt={game.title} 
-              style={{ 
-                width: '120px', 
-                minWidth: '120px', 
-                objectFit: 'cover', 
-                backgroundColor: '#2d3748'
-              }} 
-            />
-
-            {/* Contenedor de la información */}
-            <div style={{ display: 'flex', flexDirection: 'column', padding: '20px', flexGrow: 1 }}>
-              <div style={{ marginBottom: '10px' }}>
-                <Link 
-                  to={`/game/${game.id}`} 
-                  style={{ fontSize: '19px', fontWeight: 'bold', textDecoration: 'none', color: '#38bdf8' }}
-                >
-                  {game.title}
-                </Link>
-                
-                {/* Descripción recuperada del objeto */}
-                <p style={{ color: '#94a3b8', fontSize: '14px', margin: '6px 0 0 0', lineHeight: '1.4' }}>
-                  {game.description}
-                </p>
+          <article key={game.id} className="game-card">
+            <Link to={`/game/${game.id}`} style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}>
+              <div style={{ position: 'relative', minHeight: '180px', overflow: 'hidden' }}>
+                <img
+                  src={game.image}
+                  alt={game.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.35s ease' }}
+                />
               </div>
-              
-              {/* Contenedor inferior con el precio y el botón de eliminar */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '10px' }}>
-                <span style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '16px' }}>{game.price}</span>
-                
-                <button 
-                  onClick={() => removeFavorite(game.id)}
-                  style={{ 
-                    padding: '8px 16px', 
-                    backgroundColor: '#ef4444', // Color rojo para indicar "quitar/eliminar"
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '6px', 
-                    cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#dc2626'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#ef4444'}
-                >
-                  Quitar de Favoritos
-                </button>
+              <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '14px', flexGrow: 1 }}>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: '1.2rem', color: '#f8fafc' }}>{game.title}</h3>
+                  <p style={{ margin: '10px 0 0', color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                    {game.description}
+                  </p>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
+                  <span style={{ color: '#4ade80', fontWeight: '700' }}>{game.price}</span>
+                  <span style={{ color: '#66c0f4', fontWeight: '700' }}>Ver</span>
+                </div>
               </div>
+            </Link>
+            <div style={{ padding: '0 22px 22px', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => removeFavorite(game.id)}
+                style={{
+                  width: '100%',
+                  padding: '12px 0',
+                  borderRadius: '999px',
+                  border: 'none',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  color: '#fff',
+                  backgroundColor: '#ef4444',
+                  transition: 'background-color 0.2s ease, transform 0.2s ease',
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.backgroundColor = '#dc2626';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.backgroundColor = '#ef4444';
+                }}
+              >
+                Quitar de Favoritos
+              </button>
             </div>
-
-          </li>
+          </article>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

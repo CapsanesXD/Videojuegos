@@ -1,148 +1,105 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FavoritesContext } from '../context/FavoritesContext';
-
-// 1. Array de datos actualizado con descripciones
-const initialGames = [
-  { 
-    id: '1', 
-    title: 'Aventura Épica', 
-    price: '$19.99', 
-    description: 'Embárcate en un viaje inolvidable a través de montañas sagradas y paisajes ancestrales llenos de misterio.',
-    image: 'https://thumbs.dreamstime.com/b/excursionista-hacer-senderismo-actividad-en-la-monta%C3%B1a-jap%C3%B3n-aventura-%C3%A9pica-de-trekking-del-norte-alpes-nagano-con-naturaleza-208130179.jpg' 
-  },
-  { 
-    id: '2', 
-    title: 'Carreras Turbo', 
-    price: '$9.99', 
-    description: 'Siente la adrenalina de la alta velocidad nocturna en circuitos urbanos diseñados para los pilotos más exigentes.',
-    image: 'https://cdn.pixabay.com/photo/2022/07/01/08/37/race-cars-7295200_1280.jpg' 
-  },
-  { 
-    id: '3', 
-    title: 'Estrategia Total', 
-    price: '$14.99', 
-    description: 'Dirige tus ejércitos, gestiona tus recursos con precisión y conquista imperios en este simulador táctico en tiempo real.',
-    image: 'https://elcomercio.pe/resizer/_tQO_8JajE_yjw3eUQdcU-AsJL4=/1200x1200/smart/filters:format(jpeg):quality(75)/arc-anglerfish-arc2-prod-elcomercio.s3.amazonaws.com/public/IGFYHC3JD5GLVCMPQK2MYFE3Q4.jpg' 
-  },
-  { 
-    id: '4', 
-    title: 'Indie Relajante', 
-    price: '$4.99', 
-    description: 'Desconéctate del mundo con puzles armónicos, una banda sonora retro envolvente y mecánicas libres de estrés.',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSufI3pVmseoliHh5tz6OCT0dwtUB3TgdDmp9UdukTgnyJ1ZNAaXSf505iZkZfrfvu1ZnRzT2m9Q2rRTixK-x_9NekzMtje3tdzbX3o4Q&s=10' 
-  },
-
-    { 
-    id: '5', 
-    title: 'abogados jjk', 
-    price: '$4.99', 
-    description: 'Desconéctate del mundo con puzles armónicos, una banda sonora retro envolvente y mecánicas libres de estrés.',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5sEG0u3_8CUAQhbz0x-VTFBjP34i_w1V0HQ&s' 
-  },
-];
+import { games } from '../data/games';
 
 export default function Catalog() {
   const [query, setQuery] = useState('');
-  const { addFavorite } = useContext(FavoritesContext);
+  const { favorites, addFavorite, removeFavorite } = useContext(FavoritesContext);
 
-  const filtered = initialGames.filter((g) =>
-    g.title.toLowerCase().includes(query.toLowerCase())
+  const filtered = games.filter((g) =>
+    g.title.toLowerCase().includes(query.toLowerCase()) ||
+    g.description.toLowerCase().includes(query.toLowerCase())
   );
 
+  const isFavorite = (gameId) => favorites.some((item) => item.id === gameId);
+
   return (
-    <div style={{ fontFamily: 'sans-serif', maxWidth: '700px', margin: '0 auto', padding: '20px', color: '#fff' }}>
-      <h2 style={{ marginBottom: '10px' }}>Catálogo de Juegos</h2>
-      
-      {/* Barra de búsqueda */}
-      <div style={{ marginBottom: 25, display: 'flex', alignItems: 'center', gap: '15px' }}>
+    <div style={{ fontFamily: 'sans-serif', maxWidth: '1200px', margin: '0 auto', padding: '20px 0', color: '#fff' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginBottom: '28px' }}>
+        <h2 style={{ margin: 0, color: '#f8fafc' }}>Catálogo de Juegos</h2>
+        <p style={{ margin: 0, color: '#94a3b8', maxWidth: '720px' }}>
+          Explora la colección con filtros rápidos y añade tus títulos favoritos con un solo clic.
+        </p>
+      </div>
+
+      <div style={{ marginBottom: 28, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
         <input
           aria-label="buscar"
           placeholder="Buscar juegos..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          style={{ 
-            padding: '10px 14px', 
-            width: '250px', 
-            borderRadius: '6px', 
-            border: '1px solid #444', 
-            backgroundColor: '#1e2530', 
-            color: '#fff' 
+          style={{
+            padding: '14px 16px',
+            width: '100%',
+            maxWidth: '320px',
+            borderRadius: '12px',
+            border: '1px solid #2d3748',
+            backgroundColor: '#131a24',
+            color: '#f8fafc',
+            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.04)',
           }}
         />
-        <span style={{ color: '#aaa', fontSize: '14px' }}>Resultados: {filtered.length}</span>
+        <span style={{ color: '#94a3b8', fontSize: '0.95rem' }}>Resultados: {filtered.length}</span>
       </div>
 
-      {/* Lista del catálogo */}
-      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        {filtered.map((game) => (
-          <li 
-            key={game.id} 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'stretch', // Estira la imagen y el contenido para que midan lo mismo de alto
-              backgroundColor: '#1a202c', // Fondo oscuro que combina con tu app
-              border: '1px solid #2d3748',
-              borderRadius: '12px',
-              overflow: 'hidden', // Mantiene los bordes redondeados limpios
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-            }}
-          >
-            {/* Imagen más grande (120px) */}
-            <img 
-              src={game.image} 
-              alt={game.title} 
-              style={{ 
-                width: '120px', 
-                minWidth: '120px', // Evita que la imagen se encoja si el texto es largo
-                objectFit: 'cover', 
-                backgroundColor: '#2d3748'
-              }} 
-            />
+      <div className="catalog-grid">
+        {filtered.map((game) => {
+          const favorite = isFavorite(game.id);
+          return (
+            <article key={game.id} className="game-card">
+              <Link to={`/game/${game.id}`} style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}>
+                <div style={{ position: 'relative', minHeight: '190px', overflow: 'hidden' }}>
+                  <img
+                    src={game.image}
+                    alt={game.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.35s ease' }}
+                  />
+                </div>
+                <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '14px', flexGrow: 1 }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '1.18rem', color: '#f8fafc' }}>{game.title}</h3>
+                    <p style={{ margin: '12px 0 0', color: '#94a3b8', fontSize: '0.95rem', lineHeight: '1.7' }}>
+                      {game.description}
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
+                    <span style={{ color: '#4ade80', fontWeight: '700' }}>{game.price}</span>
+                    <span style={{ color: '#66c0f4', fontWeight: '700' }}>Ver</span>
+                  </div>
+                </div>
+              </Link>
 
-            {/* Contenedor de la información del juego */}
-            <div style={{ display: 'flex', flexDirection: 'column', padding: '20px', flexGrow: 1, justifyHeight: 'space-between' }}>
-              <div style={{ marginBottom: '10px' }}>
-                <Link 
-                  to={`/game/${game.id}`} 
-                  style={{ fontSize: '19px', fontWeight: 'bold', textDecoration: 'none', color: '#38bdf8' }}
-                >
-                  {game.title}
-                </Link>
-                
-                {/* Nueva Descripción del juego */}
-                <p style={{ color: '#94a3b8', fontSize: '14px', margin: '6px 0 0 0', lineHeight: '1.4' }}>
-                  {game.description}
-                </p>
-              </div>
-              
-              {/* Contenedor inferior: Precio y Botón alineados */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '10px' }}>
-                <span style={{ color: '#4ade80', fontWeight: 'bold', fontSize: '16px' }}>{game.price}</span>
-                
-                <button 
-                  onClick={() => addFavorite(game)}
-                  style={{ 
-                    padding: '8px 16px', 
-                    backgroundColor: '#06b6d4', 
-                    color: 'white', 
-                    border: 'none', 
-                    borderRadius: '6px', 
+              <div style={{ padding: '0 22px 22px', display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  onClick={() => (favorite ? removeFavorite(game.id) : addFavorite(game))}
+                  style={{
+                    width: '100%',
+                    padding: '12px 0',
+                    borderRadius: '999px',
+                    border: 'none',
+                    fontWeight: '700',
                     cursor: 'pointer',
-                    fontWeight: '600',
-                    transition: 'background-color 0.2s'
+                    color: '#fff',
+                    backgroundColor: favorite ? '#6b7280' : '#66c0f4',
+                    transition: 'background-color 0.2s ease, transform 0.2s ease',
                   }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#0891b2'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#06b6d4'}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.backgroundColor = favorite ? '#4b5563' : '#4ea8df';
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.backgroundColor = favorite ? '#6b7280' : '#66c0f4';
+                  }}
                 >
-                  Añadir a Favoritos
+                  {favorite ? 'Quitar de Favoritos' : 'Añadir a Favoritos'}
                 </button>
               </div>
-            </div>
-
-          </li>
-        ))}
-      </ul>
+            </article>
+          );
+        })}
+      </div>
     </div>
   );
 }
